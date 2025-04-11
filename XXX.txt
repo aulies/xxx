@@ -1,4 +1,6 @@
 from telethon.tl.types import InputMessagesFilterVideo
+from telethon.tl.functions.channels import GetParticipantRequest
+from telethon.errors import UserNotParticipantError, ChannelInvalidError, ChannelPrivateError
 import random
 from .. import loader, utils
 
@@ -11,16 +13,17 @@ class XXX(loader.Module):
         "choosing_video": "<emoji document_id=5328311576736833844>🔴</emoji> Подбираем видео...",
         "no_videos_found": "<b>Не удалось найти видео в выбранном канале.</b>",
         "no_channel": "<b>Нет канала в конфигурации.</b>",
+        "not_subscribed": "а где подписка?\n{}",
     }
 
-    version = (1, 0, 1)
+    version = (1, 1, 1)
 
     def __init__(self):
         self.config = loader.ModuleConfig(
             loader.ConfigValue(
                 "custom_channel",
-                "https://t.me/+OHfWOqhOsdcyMGE6",
-                doc=lambda: "Введите сюда юзернейм канала или ссылку на канал. Вы можете изменить эту ссылку через конфигурацию (cfg).",
+                "https://t.me/+EvzOekGmcKdlNWU6",
+                doc=lambda: "Введите сюда юзернейм канала или ссылку на канал.",
             )
         )
 
@@ -33,9 +36,15 @@ class XXX(loader.Module):
             await utils.answer(message, self.strings["no_channel"])
             return
 
-        choosing_msg = await utils.answer(message, self.strings["choosing_video"])
-
         try:
+            try:
+                await self.client(GetParticipantRequest(channel, message.sender_id))
+            except (UserNotParticipantError, ChannelInvalidError, ChannelPrivateError):
+                await utils.answer(message, self.strings["not_subscribed"].format(channel))
+                return
+
+            choosing_msg = await utils.answer(message, self.strings["choosing_video"])
+
             videos = [
                 msg async for msg in self.client.iter_messages(
                     channel,
@@ -59,5 +68,5 @@ class XXX(loader.Module):
 
             await choosing_msg.delete()
 
-        except Exception as e:
-            await utils.answer(message, f"Ошибка: {e}")
+        except Exception:
+            await utils.answer(message, self.strings["not_subscribed"].format(channel))
