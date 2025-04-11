@@ -26,7 +26,7 @@ class XXX(loader.Module):
 
     @loader.command()
     async def x(self, message):
-        """Кидает в чат пошлости 😇"""
+        """Кидает в чат пошлости"""
         channel = self.config["custom_channel"]
 
         if not channel:
