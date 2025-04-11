@@ -22,7 +22,7 @@ class XXX(loader.Module):
         self.config = loader.ModuleConfig(
             loader.ConfigValue(
                 "custom_channel",
-                "https://t.me/+EvzOekGmcKdlNWU6",
+                "https://t.me/+462RN1z3OZg4MjYy",  # Ссылка по умолчанию
                 doc=lambda: "Введите сюда юзернейм канала или ссылку на канал.",
             )
         )
