@@ -13,7 +13,7 @@ class XXX(loader.Module):
         "no_channel": "<b>Нет канала в конфигурации.</b>",
     }
 
-    version = (1, 0, 0)
+    version = (1, 0, 1)
 
     def __init__(self):
         self.config = loader.ModuleConfig(
@@ -26,7 +26,7 @@ class XXX(loader.Module):
 
     @loader.command()
     async def x(self, message):
-        """Кидает в чат пошлости"""
+        """Кидает в чат пошлости 😇"""
         channel = self.config["custom_channel"]
 
         if not channel:
